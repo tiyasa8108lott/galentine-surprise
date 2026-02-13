@@ -1,298 +1,471 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Swastika 💕</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>For Swastika 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    body {
+      background: #f4e3e3;
+      overflow: hidden;
+    }
 
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
+    .page {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+    }
 
-body{
-background:#f4e3e3;
-overflow:hidden;
-}
+    .active {
+      display: flex;
+    }
 
-.page{
-display:none;
-min-height:100vh;
-width:100%;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:20px;
-}
+    /* floating hearts */
+    body::before {
+      content: "💕 💖 💕 💖 💕 💖";
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      opacity: 0.4;
+      letter-spacing: 10px;
+      pointer-events: none;
+      z-index: 5;
+    }
 
-.active{
-display:flex;
-}
+    /* Shinchan image */
+    .shinchan-img {
+      width: 140px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+      margin-bottom: 20px;
+    }
 
-/* Floating hearts */
-body::before{
-content:"💕 💖 💕 💖 💕 💖";
-position:fixed;
-top:10px;
-left:50%;
-transform:translateX(-50%);
-font-size:18px;
-opacity:0.4;
-letter-spacing:10px;
-}
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 32px;
+      color: #c2185b;
+      margin-bottom: 20px;
+    }
 
-/* Shinchan */
-.shinchan-img{
-width:140px;
-height:140px;
-object-fit:cover;
-border-radius:20px;
-box-shadow:0 10px 25px rgba(255,105,180,0.3);
-margin-bottom:20px;
-}
+    /* general buttons */
+    button {
+      padding: 12px 26px;
+      border-radius: 30px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 8px;
+      transition: 0.3s;
+    }
 
-h1{
-font-family:'Dancing Script',cursive;
-font-size:32px;
-color:#c2185b;
-margin-bottom:20px;
-}
+    .yes {
+      background: linear-gradient(45deg, #ff4d88, #ff6fa5);
+      color: white;
+      box-shadow: 0 8px 20px rgba(255, 77, 136, 0.4);
+    }
 
-button{
-padding:12px 26px;
-border-radius:30px;
-border:none;
-font-size:15px;
-font-weight:600;
-cursor:pointer;
-margin:8px;
-transition:0.3s;
-}
+    .no {
+      background: white;
+      border: 2px solid #ff4d88;
+      color: #ff4d88;
+      position: absolute;
+    }
 
-.yes{
-background:linear-gradient(45deg,#ff4d88,#ff6fa5);
-color:white;
-box-shadow:0 8px 20px rgba(255,77,136,0.4);
-}
+    /* back buttons (gentle style) */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: transparent;
+      border: 1px solid #ffa5b0;
+      color: #b03a5e;
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      z-index: 10;
+    }
 
-.no{
-background:white;
-border:2px solid #ff4d88;
-color:#ff4d88;
-position:absolute;
-}
+    .back-btn:hover {
+      background: #ffe2e2;
+    }
 
-.message-box{
-background:white;
-max-width:500px;
-padding:25px;
-border-radius:20px;
-box-shadow:0 15px 40px rgba(255,105,180,0.2);
-font-size:15px;
-line-height:1.7;
-color:#6b2c43;
-}
+    /* container for YES/NO on page1 */
+    .btn-container {
+      position: relative;
+      height: 80px;
+      width: 100%;
+      max-width: 300px;
+      margin-top: 10px;
+    }
 
-/* Gift Grid */
-.gift-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:20px;
-max-width:350px;
-margin-top:20px;
-}
+    /* message card */
+    .message-box {
+      background: white;
+      max-width: 500px;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.2);
+      font-size: 15px;
+      line-height: 1.7;
+      color: #6b2c43;
+      margin: 20px 0;
+    }
 
-.gift-box{
-cursor:pointer;
-transition:0.3s;
-}
+    /* gift grid */
+    .gift-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 350px;
+      margin-top: 20px;
+    }
 
-.gift-box img{
-width:120px;
-}
+    .gift-box {
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-.gift-box:hover{
-transform:scale(1.1);
-}
+    .gift-box img {
+      width: 120px;
+      pointer-events: none; /* so click goes to parent div */
+    }
 
-#finalGift{
-display:none;
-margin-top:20px;
-width:95%;
-max-width:450px;
-border-radius:20px;
-box-shadow:0 15px 40px rgba(0,0,0,0.2);
-}
+    .gift-box:hover {
+      transform: scale(1.1);
+    }
 
-#screenshotText{
-display:none;
-margin-top:15px;
-font-weight:600;
-color:#c2185b;
-}
-</style>
+    /* final gift image */
+    #finalGift {
+      display: none;
+      margin-top: 20px;
+      width: 95%;
+      max-width: 450px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    /* loading spinner for gift image */
+    .loader {
+      border: 6px solid #ffe2e2;
+      border-top: 6px solid #ff4d88;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 30px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #screenshotText {
+      display: none;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #c2185b;
+    }
+
+    
+    .preload-images {
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
-<!-- PAGE 1 -->
-<div class="page active" id="page1">
-<img id="shinchanImg" class="shinchan-img"
-src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaUd3hMb97ZyAJ1aVmohO4yVvIYW8yXm-RIw&s">
+  
+  <div class="preload-images">
+    <img src="https://cococart.in/cdn/shop/files/1CH2568.png?v=1728473289" alt="preload1">
+    <img src="https://i.pinimg.com/474x/ea/44/77/ea447791c477de86d824b52e71399190.jpg" alt="preload2">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyvr0fR6b3SC8Q1NkPw3BGGzkiZTy9hCr7oA&s" alt="preload3">
+    <img src="https://vbhushan.in/cdn/shop/files/IMG-0731_be20c5d3-be00-4300-8dc3-c87e12412a9f.jpg?v=1727610580&width=3024" alt="preload4">
+  </div>
 
-<h1>Fine girl, will you be my Galentine? 💕</h1>
+  
+  <div class="page active" id="page1">
+    <img id="shinchanImg" class="shinchan-img"
+         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaUd3hMb97ZyAJ1aVmohO4yVvIYW8yXm-RIw&s"
+         alt="Shinchan">
+    <h1>Fine girl, will you be my Galentine? 💕</h1>
 
-<div style="position:relative;height:80px;">
-<button class="yes" onclick="yesClicked()">Absolutely 💖</button>
-<button class="no" id="noBtn">No 😒</button>
-</div>
-</div>
+    <div class="btn-container">
+      <button class="yes" onclick="yesClicked()">Absolutely 💖</button>
+      <button class="no" id="noBtn">No 😒</button>
+    </div>
+  </div>
 
-<!-- PAGE 2 (MESSAGE PAGE) -->
- <button onclick="switchPage('page1')" class="no">
-⬅ Back to Home
-</button>
+  
+  <div class="page" id="page2">
+    <button class="back-btn" onclick="switchPage('page1')">← Back to Home</button>
+    <h1>From Tiyasa 💌</h1>
+    <div class="message-box">
+      Swastika,<br><br>
+      We started as two little girls in school, not knowing that one day distance would separate our cities but never our hearts.<br><br>
+      From sharing lunch boxes and secrets…<br>
+      to late night calls and random “I miss you” texts…<br><br>
+      No matter how many miles stand between us, you have always been my safe place.<br><br>
+      You are my forever person 💕<br><br>
+      Always and forever,<br>
+      Your Tiyasa 💖
+    </div>
+    <button class="yes" onclick="openGifts()">Open Your Surprise 🎁</button>
+  </div>
 
-<div class="page" id="page2">
+  
+  <div class="page" id="page3">
+    <button class="back-btn" onclick="switchPage('page2')">← Back to Letter</button>
+    <h1>Pick Your Surprise 🎁</h1>
 
-<h1>From Tiyasa 💌</h1>
+    
+    <div class="gift-grid" id="giftGrid">
+      <div class="gift-box" onclick="showGift(1)">
+        <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
+      </div>
+      <div class="gift-box" onclick="showGift(2)">
+        <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
+      </div>
+      <div class="gift-box" onclick="showGift(3)">
+        <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
+      </div>
+      <div class="gift-box" onclick="showGift(4)">
+        <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
+      </div>
+    </div>
 
-<div class="message-box">
-Swastika,<br><br>
+   
+    <div id="giftLoader" class="loader" style="display: none;"></div>
 
-We started as two little girls in school, not knowing that one day distance would separate our cities but never our hearts.<br><br>
+  
+    <img id="finalGift" src="" alt="surprise gift">
 
-From sharing lunch boxes and secrets…  
-to late night calls and random “I miss you” texts…<br><br>
+    <p id="screenshotText">📸 Take screenshot & send to me 💕</p>
+  </div>
 
-No matter how many miles stand between us, you have always been my safe place.<br><br>
+  <script>
+    (function() {
+      "use strict";
 
-You are my forever person 💕<br><br>
+      
+      const GIFT_IMAGES = {
+        1: "https://cococart.in/cdn/shop/files/1CH2568.png?v=1728473289",
+        2: "https://i.pinimg.com/474x/ea/44/77/ea447791c477de86d824b52e71399190.jpg",
+        3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyvr0fR6b3SC8Q1NkPw3BGGzkiZTy9hCr7oA&s",
+        4: "https://vbhushan.in/cdn/shop/files/IMG-0731_be20c5d3-be00-4300-8dc3-c87e12412a9f.jpg?v=1727610580&width=3024"
+      };
 
-Always and forever,<br>
-Your Tiyasa 💖
-</div>
+     
+      function preloadGiftImages() {
+        for (let key in GIFT_IMAGES) {
+          let img = new Image();
+          img.src = GIFT_IMAGES[key];
+        }
+      }
+      preloadGiftImages(); 
 
-<br>
-<button class="yes" onclick="openGifts()">Open Your Surprise 🎁</button>
+      
+      const noBtn = document.getElementById('noBtn');
 
-</div>
+      function moveNoButton() {
+        
+        const container = document.querySelector('.btn-container');
+        const containerRect = container.getBoundingClientRect();
+        const btnRect = noBtn.getBoundingClientRect();
 
-<!-- PAGE 3 (4 GIFT BOXES) -->
-<div class="page" id="page3">
+        
+        let maxX = containerRect.width - btnRect.width - 20;
+        let maxY = containerRect.height - btnRect.height - 10;
 
-<h1>Pick Your Surprise 🎁</h1>
+        
+        let x = Math.random() * maxX * 2 - maxX; 
+        let y = Math.random() * maxY * 2 - maxY * 0.5;
 
-<div class="gift-grid" id="giftGrid">
+        
+        x = Math.min(Math.max(x, -maxX * 0.8), maxX * 0.8);
+        y = Math.min(Math.max(y, -10), maxY);
 
-<div class="gift-box" onclick="showGift(1)">
-<img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png">
-</div>
+        noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      }
+      if (noBtn) {
+        
+        noBtn.addEventListener('mouseover', moveNoButton);
+        
+        noBtn.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          moveNoButton();
+        });
+        
+        noBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          moveNoButton();
+        });
+      }
 
-<div class="gift-box" onclick="showGift(2)">
-<img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png">
-</div>
+      
+      window.yesClicked = function() {
+        setTimeout(() => {
+          switchPage('page2');
+        }, 400); 
+      };
 
-<div class="gift-box" onclick="showGift(3)">
-<img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png">
-</div>
+      
+      window.openGifts = function() {
+        switchPage('page3');
+      };
 
-<div class="gift-box" onclick="showGift(4)">
-<img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png">
-</div>
+      
+      window.switchPage = function(pageId) {
+        
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        const targetPage = document.getElementById(pageId);
+        targetPage.classList.add('active');
 
-</div>
+        
+        if (pageId === 'page1') {
+          
+          if (noBtn) noBtn.style.transform = 'translate(0,0)';
+          
+          const grid = document.getElementById('giftGrid');
+          const finalGift = document.getElementById('finalGift');
+          const loader = document.getElementById('giftLoader');
+          const text = document.getElementById('screenshotText');
+          
+          
+          if (localStorage.getItem('giftOpened') !== 'true') {
+            if (grid) {
+              grid.style.display = 'grid';
+              grid.innerHTML = ` 
+                <div class="gift-box" onclick="showGift(1)">
+                  <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
+                </div>
+                <div class="gift-box" onclick="showGift(2)">
+                  <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
+                </div>
+                <div class="gift-box" onclick="showGift(3)">
+                  <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
+                </div>
+                <div class="gift-box" onclick="showGift(4)">
+                  <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
+                </div>
+              `;
+            }
+            if (finalGift) finalGift.style.display = 'none';
+            if (loader) loader.style.display = 'none';
+            if (text) text.style.display = 'none';
+          }
+        }
+-
+        if (pageId === 'page3') {
+          const grid = document.getElementById('giftGrid');
+          const finalGift = document.getElementById('finalGift');
+          const loader = document.getElementById('giftLoader');
+          const text = document.getElementById('screenshotText');
 
-<img id="finalGift">
-<p id="screenshotText">Take screenshot & send to me 💕</p>
-<br>
+          
+          const giftOpened = localStorage.getItem('giftOpened') === 'true';
+          const giftNumber = localStorage.getItem('giftNumber');
 
+          if (giftOpened && giftNumber) {
+            
+            grid.style.display = 'none';
+            loader.style.display = 'none';
+            finalGift.src = GIFT_IMAGES[giftNumber];
+            finalGift.style.display = 'block';
+            text.style.display = 'block';
+          } else if (giftOpened) {
+            
+            grid.innerHTML = "<h2 style='color:#c2185b; margin-top:30px;'>💝 Surprise already opened 💝</h2>";
+            finalGift.style.display = 'none';
+            loader.style.display = 'none';
+            text.style.display = 'none';
+          } else {
+            
+            grid.style.display = 'grid';
+            finalGift.style.display = 'none';
+            loader.style.display = 'none';
+            text.style.display = 'none';
+          }
+        }
+      };
 
-</div>
+      
+      window.showGift = function(num) {
+       
+        if (localStorage.getItem('giftOpened') === 'true') {
+          alert('You already opened your surprise 💕');
+          return;
+        }
 
-<script>
-window.onload = function(){
-if(localStorage.getItem("giftOpened") === "true"){
-document.getElementById("giftGrid").innerHTML =
-"<h2 style='color:#c2185b'>Surprise already opened 💕</h2>";
-}
-}
+        const grid = document.getElementById('giftGrid');
+        const finalGift = document.getElementById('finalGift');
+        const loader = document.getElementById('giftLoader');
+        const text = document.getElementById('screenshotText');
 
-const noBtn=document.getElementById("noBtn");
+        
+        grid.style.display = 'none';
+        loader.style.display = 'block';
+        finalGift.style.display = 'none';
+        text.style.display = 'none';
 
-noBtn.addEventListener("mouseover",()=>{
-let x=Math.random()*150-75;
-let y=Math.random()*50;
-noBtn.style.transform=`translate(${x}px,${y}px)`;
-});
+        
+        finalGift.src = GIFT_IMAGES[num];
 
-function yesClicked(){
-setTimeout(()=>{
-switchPage("page2");
-},500);
-}
+        
+        finalGift.onload = function() {
+          loader.style.display = 'none';
+          finalGift.style.display = 'block';
+          text.style.display = 'block';
 
-function openGifts(){
-switchPage("page3");
-}
+          
+          localStorage.setItem('giftOpened', 'true');
+          localStorage.setItem('giftNumber', num);
+        };
 
-function switchPage(pageId){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(pageId).classList.add("active");
-}
+        
+        finalGift.onerror = function() {
+          loader.style.display = 'none';
+          finalGift.alt = '💝 Gift image failed to load, but love is still there! 💝';
+          finalGift.style.display = 'block';
+          text.style.display = 'block';
+          localStorage.setItem('giftOpened', 'true');
+          localStorage.setItem('giftNumber', num);
+        };
+      };
 
-function showGift(num){
+      
+      window.onload = function() {
+        
+        const giftOpened = localStorage.getItem('giftOpened') === 'true';
+        if (giftOpened) {
+          const giftNum = localStorage.getItem('giftNumber');
+          
+        }
+      };
 
-// Check if already opened
-if(localStorage.getItem("giftOpened") === "true"){
-alert("You already opened your surprise 💕");
-return;
-}
-
-let gift=document.getElementById("finalGift");
-let text=document.getElementById("screenshotText");
-let grid=document.getElementById("giftGrid");
-
-if(num==1){
-gift.src="https://cococart.in/cdn/shop/files/1CH2568.png?v=1728473289";
-}
-if(num==2){
-gift.src="https://i.pinimg.com/474x/ea/44/77/ea447791c477de86d824b52e71399190.jpg";
-}
-if(num==3){
-gift.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyvr0fR6b3SC8Q1NkPw3BGGzkiZTy9hCr7oA&s";
-}
-if(num==4){
-gift.src="https://vbhushan.in/cdn/shop/files/IMG-0731_be20c5d3-be00-4300-8dc3-c87e12412a9f.jpg?v=1727610580&width=3024";
-}
-
-grid.style.display="none";
-gift.style.display="block";
-text.style.display="block";
-
-// Save that gift is opened
-localStorage.setItem("giftOpened","true");
-}
-
-function switchPage(pageId){
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-document.getElementById(pageId).classList.add("active");
-
-
-if(pageId === "page1"){
-document.getElementById("giftGrid").style.display="grid";
-document.getElementById("finalGift").style.display="none";
-document.getElementById("screenshotText").style.display="none";
-}
-}
-
-
-</script>
+    })();
+  </script>
 
 </body>
 </html>
