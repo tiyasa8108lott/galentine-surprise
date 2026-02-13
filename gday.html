@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>For Swastika 💕</title>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -16,6 +16,7 @@
     body {
       background: #f4e3e3;
       overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .page {
@@ -48,7 +49,6 @@
       z-index: 5;
     }
 
-    /* Shinchan image */
     .shinchan-img {
       width: 140px;
       height: 140px;
@@ -65,7 +65,7 @@
       margin-bottom: 20px;
     }
 
-    /* general buttons */
+    /* buttons */
     button {
       padding: 12px 26px;
       border-radius: 30px;
@@ -83,19 +83,23 @@
       box-shadow: 0 8px 20px rgba(255, 77, 136, 0.4);
     }
 
+    /* ----- NO BUTTON - COMPLETELY UNTAPPABLE ON MOBILE ----- */
     .no {
       background: white;
       border: 2px solid #ff4d88;
       color: #ff4d88;
       position: absolute;
+      touch-action: none;          /* prevents scroll/zoom and helps kill click */
+      -webkit-touch-callout: none;
+      user-select: none;
+      will-change: transform;
     }
 
-    /* back buttons (gentle style) */
     .back-btn {
       position: absolute;
       top: 20px;
       left: 20px;
-      background: transparent;
+      background: rgba(255, 255, 255, 0.7);
       border: 1px solid #ffa5b0;
       color: #b03a5e;
       padding: 8px 16px;
@@ -106,20 +110,15 @@
       z-index: 10;
     }
 
-    .back-btn:hover {
-      background: #ffe2e2;
-    }
-
-    /* container for YES/NO on page1 */
     .btn-container {
       position: relative;
       height: 80px;
       width: 100%;
       max-width: 300px;
       margin-top: 10px;
+      overflow: visible;   /* allow button to move outside */
     }
 
-    /* message card */
     .message-box {
       background: white;
       max-width: 500px;
@@ -143,19 +142,18 @@
 
     .gift-box {
       cursor: pointer;
-      transition: 0.3s;
+      transition: 0.2s;
     }
 
     .gift-box img {
       width: 120px;
-      pointer-events: none; /* so click goes to parent div */
+      pointer-events: none;
     }
 
-    .gift-box:hover {
-      transform: scale(1.1);
+    .gift-box:active {
+      transform: scale(0.95);
     }
 
-    /* final gift image */
     #finalGift {
       display: none;
       margin-top: 20px;
@@ -165,7 +163,7 @@
       box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     }
 
-    /* loading spinner for gift image */
+    /* loading spinner */
     .loader {
       border: 6px solid #ffe2e2;
       border-top: 6px solid #ff4d88;
@@ -188,25 +186,14 @@
       color: #c2185b;
     }
 
-    
-    .preload-images {
-      display: none;
-    }
+    /* hidden preload — will be removed, we preload with JS */
   </style>
 </head>
 <body>
 
-  
-  <div class="preload-images">
-    <img src="https://cococart.in/cdn/shop/files/1CH2568.png?v=1728473289" alt="preload1">
-    <img src="https://i.pinimg.com/474x/ea/44/77/ea447791c477de86d824b52e71399190.jpg" alt="preload2">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyvr0fR6b3SC8Q1NkPw3BGGzkiZTy9hCr7oA&s" alt="preload3">
-    <img src="https://vbhushan.in/cdn/shop/files/IMG-0731_be20c5d3-be00-4300-8dc3-c87e12412a9f.jpg?v=1727610580&width=3024" alt="preload4">
-  </div>
-
-  
+  <!-- PAGE 1 – PROPOSAL -->
   <div class="page active" id="page1">
-    <img id="shinchanImg" class="shinchan-img"
+    <img class="shinchan-img" 
          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaUd3hMb97ZyAJ1aVmohO4yVvIYW8yXm-RIw&s"
          alt="Shinchan">
     <h1>Fine girl, will you be my Galentine? 💕</h1>
@@ -217,7 +204,7 @@
     </div>
   </div>
 
-  
+  <!-- PAGE 2 – LETTER -->
   <div class="page" id="page2">
     <button class="back-btn" onclick="switchPage('page1')">← Back to Home</button>
     <h1>From Tiyasa 💌</h1>
@@ -234,12 +221,11 @@
     <button class="yes" onclick="openGifts()">Open Your Surprise 🎁</button>
   </div>
 
-  
+  <!-- PAGE 3 – GIFT BOXES -->
   <div class="page" id="page3">
     <button class="back-btn" onclick="switchPage('page2')">← Back to Letter</button>
     <h1>Pick Your Surprise 🎁</h1>
 
-    
     <div class="gift-grid" id="giftGrid">
       <div class="gift-box" onclick="showGift(1)">
         <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
@@ -255,20 +241,16 @@
       </div>
     </div>
 
-   
     <div id="giftLoader" class="loader" style="display: none;"></div>
-
-  
     <img id="finalGift" src="" alt="surprise gift">
-
     <p id="screenshotText">📸 Take screenshot & send to me 💕</p>
   </div>
 
   <script>
-    (function() {
+    (function(){
       "use strict";
 
-      
+      // ---------- GIFT IMAGES (preload instantly) ----------
       const GIFT_IMAGES = {
         1: "https://cococart.in/cdn/shop/files/1CH2568.png?v=1728473289",
         2: "https://i.pinimg.com/474x/ea/44/77/ea447791c477de86d824b52e71399190.jpg",
@@ -276,87 +258,75 @@
         4: "https://vbhushan.in/cdn/shop/files/IMG-0731_be20c5d3-be00-4300-8dc3-c87e12412a9f.jpg?v=1727610580&width=3024"
       };
 
-     
-      function preloadGiftImages() {
+      // PRELOAD: force browser to cache all gift images immediately
+      function preloadAllGifts() {
         for (let key in GIFT_IMAGES) {
-          let img = new Image();
+          const img = new Image();
           img.src = GIFT_IMAGES[key];
+          img.loading = "eager";
         }
       }
-      preloadGiftImages(); 
+      preloadAllGifts();
 
-      
+      // ---------- NO BUTTON – AGGRESSIVE EVASION (MOBILE + DESKTOP) ----------
       const noBtn = document.getElementById('noBtn');
 
-      function moveNoButton() {
-        
-        const container = document.querySelector('.btn-container');
-        const containerRect = container.getBoundingClientRect();
-        const btnRect = noBtn.getBoundingClientRect();
-
-        
-        let maxX = containerRect.width - btnRect.width - 20;
-        let maxY = containerRect.height - btnRect.height - 10;
-
-        
-        let x = Math.random() * maxX * 2 - maxX; 
-        let y = Math.random() * maxY * 2 - maxY * 0.5;
-
-        
-        x = Math.min(Math.max(x, -maxX * 0.8), maxX * 0.8);
-        y = Math.min(Math.max(y, -10), maxY);
-
+      function moveNoButtonFarAway() {
+        if (!noBtn) return;
+        // Move the button A LOT – up to 400px in any direction
+        const x = (Math.random() * 600) - 300;   // -300px … +300px
+        const y = (Math.random() * 600) - 300;   // -300px … +300px
         noBtn.style.transform = `translate(${x}px, ${y}px)`;
       }
+
       if (noBtn) {
-        
-        noBtn.addEventListener('mouseover', moveNoButton);
-        
-        noBtn.addEventListener('touchstart', function(e) {
-          e.preventDefault();
-          moveNoButton();
+        // ---- MODERN BROWSERS: pointerdown + touchstart + click ----
+        const evasiveEvents = ['touchstart', 'pointerdown', 'mouseover', 'click'];
+        evasiveEvents.forEach(ev => {
+          noBtn.addEventListener(ev, function(e) {
+            e.preventDefault();      // kill any default action (zoom, click, etc.)
+            e.stopPropagation();     // avoid bubbling
+            moveNoButtonFarAway();
+          });
         });
-        
-        noBtn.addEventListener('click', function(e) {
+
+        // extra safety for touchend (some browsers still fire click)
+        noBtn.addEventListener('touchend', function(e) {
           e.preventDefault();
-          moveNoButton();
+          e.stopPropagation();
         });
       }
 
-      
+      // ---------- YES CLICKED ----------
       window.yesClicked = function() {
-        setTimeout(() => {
-          switchPage('page2');
-        }, 400); 
+        setTimeout(() => switchPage('page2'), 300);
       };
 
-      
+      // ---------- OPEN GIFTS PAGE ----------
       window.openGifts = function() {
         switchPage('page3');
       };
 
-      
+      // ---------- PAGE NAVIGATION ----------
       window.switchPage = function(pageId) {
-        
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        const targetPage = document.getElementById(pageId);
-        targetPage.classList.add('active');
+        const target = document.getElementById(pageId);
+        if (target) target.classList.add('active');
 
-        
+        // --- RESET PAGE 1 (No button position & gift grid) ---
         if (pageId === 'page1') {
-          
-          if (noBtn) noBtn.style.transform = 'translate(0,0)';
+          if (noBtn) noBtn.style.transform = 'none'; // back to original
           
           const grid = document.getElementById('giftGrid');
           const finalGift = document.getElementById('finalGift');
           const loader = document.getElementById('giftLoader');
           const text = document.getElementById('screenshotText');
-          
-          
+
+          // if gift never opened, restore the 4 gift boxes
           if (localStorage.getItem('giftOpened') !== 'true') {
             if (grid) {
               grid.style.display = 'grid';
-              grid.innerHTML = ` 
+              grid.innerHTML = `
                 <div class="gift-box" onclick="showGift(1)">
                   <img src="https://cdn-icons-png.flaticon.com/512/3468/3468371.png" alt="gift box">
                 </div>
@@ -377,31 +347,28 @@
           }
         }
 
+        // --- PAGE 3: SHOW ALREADY OPENED GIFT OR GRID ---
         if (pageId === 'page3') {
           const grid = document.getElementById('giftGrid');
           const finalGift = document.getElementById('finalGift');
           const loader = document.getElementById('giftLoader');
           const text = document.getElementById('screenshotText');
-
-          
           const giftOpened = localStorage.getItem('giftOpened') === 'true';
           const giftNumber = localStorage.getItem('giftNumber');
 
           if (giftOpened && giftNumber) {
-            
+            // show the same gift again
             grid.style.display = 'none';
             loader.style.display = 'none';
             finalGift.src = GIFT_IMAGES[giftNumber];
             finalGift.style.display = 'block';
             text.style.display = 'block';
           } else if (giftOpened) {
-            
             grid.innerHTML = "<h2 style='color:#c2185b; margin-top:30px;'>💝 Surprise already opened 💝</h2>";
             finalGift.style.display = 'none';
             loader.style.display = 'none';
             text.style.display = 'none';
           } else {
-            
             grid.style.display = 'grid';
             finalGift.style.display = 'none';
             loader.style.display = 'none';
@@ -410,9 +377,8 @@
         }
       };
 
-      
+      // ---------- SHOW GIFT (WHEN CLICKING A BOX) ----------
       window.showGift = function(num) {
-       
         if (localStorage.getItem('giftOpened') === 'true') {
           alert('You already opened your surprise 💕');
           return;
@@ -423,30 +389,25 @@
         const loader = document.getElementById('giftLoader');
         const text = document.getElementById('screenshotText');
 
-        
         grid.style.display = 'none';
         loader.style.display = 'block';
         finalGift.style.display = 'none';
         text.style.display = 'none';
 
-        
+        // image already preloaded – will appear almost instantly
         finalGift.src = GIFT_IMAGES[num];
 
-        
         finalGift.onload = function() {
           loader.style.display = 'none';
           finalGift.style.display = 'block';
           text.style.display = 'block';
-
-          
           localStorage.setItem('giftOpened', 'true');
           localStorage.setItem('giftNumber', num);
         };
 
-        
         finalGift.onerror = function() {
           loader.style.display = 'none';
-          finalGift.alt = '💝 Gift image failed to load, but love is still there! 💝';
+          finalGift.alt = '💝 Gift image unavailable, but love is still there! 💝';
           finalGift.style.display = 'block';
           text.style.display = 'block';
           localStorage.setItem('giftOpened', 'true');
@@ -454,18 +415,13 @@
         };
       };
 
-      
+      // ---------- FIX: RESET NO BUTTON ON PAGE LOAD ----------
       window.onload = function() {
-        
-        const giftOpened = localStorage.getItem('giftOpened') === 'true';
-        if (giftOpened) {
-          const giftNum = localStorage.getItem('giftNumber');
-          
-        }
+        if (noBtn) noBtn.style.transform = 'none';
+        // If a gift was previously opened, we don't force any page
       };
 
     })();
   </script>
-
 </body>
 </html>
