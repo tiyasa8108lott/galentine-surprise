@@ -35,7 +35,6 @@
       display: flex;
     }
 
-    /* floating hearts */
     body::before {
       content: "💕 💖 💕 💖 💕 💖";
       position: fixed;
@@ -65,7 +64,6 @@
       margin-bottom: 20px;
     }
 
-    /* buttons */
     button {
       padding: 12px 26px;
       border-radius: 30px;
@@ -83,13 +81,13 @@
       box-shadow: 0 8px 20px rgba(255, 77, 136, 0.4);
     }
 
-    /* ----- NO BUTTON - COMPLETELY UNTAPPABLE ON MOBILE ----- */
+    /* ----- NO BUTTON – EVADES EVERY TAP ----- */
     .no {
       background: white;
       border: 2px solid #ff4d88;
       color: #ff4d88;
       position: absolute;
-      touch-action: none;          /* prevents scroll/zoom and helps kill click */
+      touch-action: none;
       -webkit-touch-callout: none;
       user-select: none;
       will-change: transform;
@@ -116,7 +114,7 @@
       width: 100%;
       max-width: 300px;
       margin-top: 10px;
-      overflow: visible;   /* allow button to move outside */
+      overflow: visible;
     }
 
     .message-box {
@@ -131,7 +129,6 @@
       margin: 20px 0;
     }
 
-    /* gift grid */
     .gift-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -163,7 +160,6 @@
       box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     }
 
-    /* loading spinner */
     .loader {
       border: 6px solid #ffe2e2;
       border-top: 6px solid #ff4d88;
@@ -185,8 +181,6 @@
       font-weight: 600;
       color: #c2185b;
     }
-
-    /* hidden preload — will be removed, we preload with JS */
   </style>
 </head>
 <body>
@@ -197,7 +191,6 @@
          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaUd3hMb97ZyAJ1aVmohO4yVvIYW8yXm-RIw&s"
          alt="Shinchan">
     <h1>Fine girl, will you be my Galentine? 💕</h1>
-
     <div class="btn-container">
       <button class="yes" onclick="yesClicked()">Absolutely 💖</button>
       <button class="no" id="noBtn">No 😒</button>
@@ -250,7 +243,7 @@
     (function(){
       "use strict";
 
-      // ---------- GIFT IMAGES (preload instantly) ----------
+      // ------- GIFT IMAGES (preload instantly) -------
       const GIFT_IMAGES = {
         1: "https://cococart.in/cdn/shop/files/1CH2568.png?v=1728473289",
         2: "https://i.pinimg.com/474x/ea/44/77/ea447791c477de86d824b52e71399190.jpg",
@@ -258,7 +251,6 @@
         4: "https://vbhushan.in/cdn/shop/files/IMG-0731_be20c5d3-be00-4300-8dc3-c87e12412a9f.jpg?v=1727610580&width=3024"
       };
 
-      // PRELOAD: force browser to cache all gift images immediately
       function preloadAllGifts() {
         for (let key in GIFT_IMAGES) {
           const img = new Image();
@@ -268,61 +260,55 @@
       }
       preloadAllGifts();
 
-      // ---------- NO BUTTON – AGGRESSIVE EVASION (MOBILE + DESKTOP) ----------
+      // ------- NO BUTTON – EVADES EVERY TAP/CLICK -------
       const noBtn = document.getElementById('noBtn');
 
       function moveNoButtonFarAway() {
         if (!noBtn) return;
-        // Move the button A LOT – up to 400px in any direction
-        const x = (Math.random() * 600) - 300;   // -300px … +300px
-        const y = (Math.random() * 600) - 300;   // -300px … +300px
+        const x = (Math.random() * 600) - 300;
+        const y = (Math.random() * 600) - 300;
         noBtn.style.transform = `translate(${x}px, ${y}px)`;
       }
 
       if (noBtn) {
-        // ---- MODERN BROWSERS: pointerdown + touchstart + click ----
         const evasiveEvents = ['touchstart', 'pointerdown', 'mouseover', 'click'];
         evasiveEvents.forEach(ev => {
           noBtn.addEventListener(ev, function(e) {
-            e.preventDefault();      // kill any default action (zoom, click, etc.)
-            e.stopPropagation();     // avoid bubbling
+            e.preventDefault();
+            e.stopPropagation();
             moveNoButtonFarAway();
           });
         });
-
-        // extra safety for touchend (some browsers still fire click)
         noBtn.addEventListener('touchend', function(e) {
           e.preventDefault();
           e.stopPropagation();
         });
       }
 
-      // ---------- YES CLICKED ----------
-      window.yesClicked = function() {
-        setTimeout(() => switchPage('page2'), 300);
-      };
+      // ------- FIX: CLEAN UP OLD / INCOMPLETE localStorage -------
+      function cleanupLocalStorage() {
+        const giftOpened = localStorage.getItem('giftOpened') === 'true';
+        const giftNumber = localStorage.getItem('giftNumber');
+        if (giftOpened && !giftNumber) {
+          localStorage.removeItem('giftOpened');   // remove orphaned flag
+        }
+      }
+      cleanupLocalStorage();   // run immediately
 
-      // ---------- OPEN GIFTS PAGE ----------
-      window.openGifts = function() {
-        switchPage('page3');
-      };
-
-      // ---------- PAGE NAVIGATION ----------
+      // ------- PAGE NAVIGATION -------
       window.switchPage = function(pageId) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const target = document.getElementById(pageId);
         if (target) target.classList.add('active');
 
-        // --- RESET PAGE 1 (No button position & gift grid) ---
+        // Reset page 1
         if (pageId === 'page1') {
-          if (noBtn) noBtn.style.transform = 'none'; // back to original
-          
+          if (noBtn) noBtn.style.transform = 'none';
           const grid = document.getElementById('giftGrid');
           const finalGift = document.getElementById('finalGift');
           const loader = document.getElementById('giftLoader');
           const text = document.getElementById('screenshotText');
 
-          // if gift never opened, restore the 4 gift boxes
           if (localStorage.getItem('giftOpened') !== 'true') {
             if (grid) {
               grid.style.display = 'grid';
@@ -347,28 +333,28 @@
           }
         }
 
-        // --- PAGE 3: SHOW ALREADY OPENED GIFT OR GRID ---
+        // PAGE 3 – SHOW GIFT OR GRID (with extra cleanup)
         if (pageId === 'page3') {
           const grid = document.getElementById('giftGrid');
           const finalGift = document.getElementById('finalGift');
           const loader = document.getElementById('giftLoader');
           const text = document.getElementById('screenshotText');
+          
+          // Re-check consistency right before showing page 3
+          cleanupLocalStorage();
+
           const giftOpened = localStorage.getItem('giftOpened') === 'true';
           const giftNumber = localStorage.getItem('giftNumber');
 
           if (giftOpened && giftNumber) {
-            // show the same gift again
+            // Valid opened gift – show it
             grid.style.display = 'none';
             loader.style.display = 'none';
             finalGift.src = GIFT_IMAGES[giftNumber];
             finalGift.style.display = 'block';
             text.style.display = 'block';
-          } else if (giftOpened) {
-            grid.innerHTML = "<h2 style='color:#c2185b; margin-top:30px;'>💝 Surprise already opened 💝</h2>";
-            finalGift.style.display = 'none';
-            loader.style.display = 'none';
-            text.style.display = 'none';
           } else {
+            // No gift opened yet (or broken flag was removed)
             grid.style.display = 'grid';
             finalGift.style.display = 'none';
             loader.style.display = 'none';
@@ -377,7 +363,16 @@
         }
       };
 
-      // ---------- SHOW GIFT (WHEN CLICKING A BOX) ----------
+      // ------- YES / OPEN GIFTS -------
+      window.yesClicked = function() {
+        setTimeout(() => switchPage('page2'), 300);
+      };
+
+      window.openGifts = function() {
+        switchPage('page3');
+      };
+
+      // ------- SHOW GIFT (CLICK ON A BOX) -------
       window.showGift = function(num) {
         if (localStorage.getItem('giftOpened') === 'true') {
           alert('You already opened your surprise 💕');
@@ -394,7 +389,6 @@
         finalGift.style.display = 'none';
         text.style.display = 'none';
 
-        // image already preloaded – will appear almost instantly
         finalGift.src = GIFT_IMAGES[num];
 
         finalGift.onload = function() {
@@ -415,10 +409,10 @@
         };
       };
 
-      // ---------- FIX: RESET NO BUTTON ON PAGE LOAD ----------
+      // ------- ON PAGE LOAD – RESET NO BUTTON & CLEAN UP AGAIN -------
       window.onload = function() {
         if (noBtn) noBtn.style.transform = 'none';
-        // If a gift was previously opened, we don't force any page
+        cleanupLocalStorage();
       };
 
     })();
